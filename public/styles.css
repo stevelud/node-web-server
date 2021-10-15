@@ -1,0 +1,16 @@
+header, footer {
+  text-align:center;
+  font-family:monospace;
+  background-color:blue;
+  padding:5px;
+  color:white;
+  max-width:75%;
+  margin:auto;
+}
+header a {
+  color:white;
+}
+main {
+  max-width:60%;
+  margin:auto;
+}
