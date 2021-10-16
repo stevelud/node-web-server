@@ -7,7 +7,7 @@ const fs = require('fs');
 
 // no arguments needed to pass to express:
 var app = express('view engine', 'hbs');
-var port = process.env.port || 8080;
+var port = process.env.PORT || 8080;
 
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
@@ -27,7 +27,7 @@ app.use((req, res, next) =>{
   //     console.log('ERROR: could not append log onto server.log.');
   //   }
   // });
-  
+
   console.log(log);
   next();
 });
