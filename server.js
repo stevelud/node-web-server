@@ -15,7 +15,7 @@ app.set('view engine', 'hbs');
 /** Logging all http requests and their details: */
 app.use((req, res, next) =>{
   let now = new Date().toString();
-  let log = now + '\n';
+  let log = 'HTTP request on: ' + now + '\n';
   log += '\t' + 'Method: ' + req.method + '\n' + '\t' + 'Path: ' + req.path;
   log += '\n' + '\t' + 'Cookies: ' + req.cookies;
 
