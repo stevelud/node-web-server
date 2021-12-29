@@ -2,8 +2,8 @@
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 // const ws = require('ws');
-// const bodyParser = require('body-parser');
 // const morgan = require('morgan');
 
 // no arguments needed to pass to express:
@@ -13,36 +13,16 @@ var port = process.env.PORT || 8080;
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 
-/** Logging all http requests and their details: */
-app.use((req, res, next) =>{
-  let now = new Date().toString();
-  let log = 'HTTP request on: ' + now + '\n';
-  log += '\t' + 'Method: ' + req.method + '\n' + '\t' + 'Path: ' + req.path;
-  log += '\n' + '\t' + 'Cookies: ' + req.cookies;
+app.use(bodyParser.urlencoded({ extended: true }))
 
-  // console.log('\t', 'IP:', req.ip);
-  // console.log('\t', 'Hostname:', req.hostname);
-
-  // fs.appendFile('server.log', log + '\n', err => {
-  //   if (err) {
-  //     console.log('ERROR: could not append log onto server.log.');
-  //   }
-  // });
-
-  console.log(log);
-  next();
-});
-
-// the following middleware goes right to the 'under maintenance' page.
-// next() is not called, and so all following middleware is ignored and
-// maintenance.hbs is the only page that ever pops up:
-// (static files in /public are still available through direct access,
-//  because that middleware is executed first)
 /*
 app.use((req, res, next) => {
   res.render('maintenance.hbs');
 });
 */
+
+// const bodyParser = require('body-parser');
+// app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(express.static(__dirname + '/public'));
 
@@ -51,21 +31,37 @@ hbs.registerHelper('getCurrentYear', () => {
 });
 
 app.get('/', (req, res) => {
+  res.status(200);
+  // res.type('text/plain')
   res.render('home.hbs', {
     pageTitle:'Home Page',
     welcomeMessage:'Welcome to my Website',
   });
-  /*
-  res.send({
-    name:'john',
-    pets:['spot', 'fido']
-  });
-  */
+  // console.log(req.headers)
+  // console.log(req.accepts)
+  // console.log(req.ip)
+  // console.log(req.path)
+  // console.log(req.hostname)
+  // console.log(req.xhr)
+  // console.log(req.protocol)
+  // console.log(req.secure)
+  // console.log(req.url)
+  // console.log(req.body)
 });
+
+app.post('/process-login', (req, res) => {
+  console.log(req.body);
+})
 
 app.get('/about', (req, res) => {
   res.render('about.hbs', {
     pageTitle:'About Page',
+  });
+});
+
+app.get('/form', (req, res) => {
+  res.render('form.hbs', {
+    pageTitle:'Test Form',
   });
 });
 

@@ -1,3 +1,7 @@
+body {
+  background-image: linear-gradient(to right, lightskyblue, lightblue);
+}
+
 header, footer {
   text-align:center;
   font-family:monospace;
