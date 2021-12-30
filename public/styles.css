@@ -1,7 +1,6 @@
 body {
   background-image: linear-gradient(to right, lightskyblue, lightblue);
 }
-
 header, footer {
   text-align:center;
   font-family:monospace;
@@ -11,8 +10,22 @@ header, footer {
   max-width:75%;
   margin:auto;
 }
+form {
+  font-family:monospace;
+  background-color:blue;
+  padding:5px;
+  color:white;
+  max-width:75%;
+  margin:auto;
+}
+form div {
+  margin-left:20px;
+}
 header a {
   color:white;
+}
+form {
+  margin-top:5px;
 }
 main {
   max-width:60%;
