@@ -10,6 +10,15 @@ header, footer {
   max-width:75%;
   margin:auto;
 }
+header {
+  margin-bottom:5px;
+}
+header a {
+  color:white;
+}
+form div {
+  margin-left:20px;
+}
 form {
   font-family:monospace;
   background-color:blue;
@@ -18,15 +27,7 @@ form {
   max-width:75%;
   margin:auto;
 }
-form div {
-  margin-left:20px;
-}
-header a {
-  color:white;
-}
-form {
-  margin-top:5px;
-}
+
 main {
   max-width:60%;
   margin:auto;

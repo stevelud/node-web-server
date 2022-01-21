@@ -12,7 +12,14 @@
 <body>
 
     {{>header}}
+
+    {{#unless validUser}}
     {{>loginform}}
+    {{/unless}}
+
+    {{#if validUser}}
+    {{>logout}}
+    {{/if}}
 
   <main>
     <p>{{welcomeMessage}}</p>
