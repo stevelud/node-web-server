@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 // const morgan = require('morgan');
 const expressSession = require('express-session')
 const cookieParser = require('cookie-parser')
+const util = require('./lib/util.js')
+
 
 // no arguments needed to pass to express:
 var app = express('view engine', 'hbs');
@@ -128,10 +130,39 @@ app.get('/signup', (req, res) => {
   });
 });
 
-app.post('/logout',(req,res) => {
+app.post('/logout', (req,res) => {
     req.session.destroy(); // session is ended; cookies on client-side are deleted
     res.redirect('/');
 });
+
+app.post('/signup-user', (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+
+  // STEP 1 - validate password
+
+  // STEP 2 - check if username already exists
+
+  // STEP 3 - fetch users array, append user to it,
+
+  let arr;
+  let newUser = {};
+
+  let users = fs.readFileSync('./lib/users.json', 'utf8');
+  users = JSON.parse(users);
+  console.log(users)
+
+  newUser.userName = username;
+  newUser.password = password;
+
+  users.push(newUser);
+  users = JSON.stringify(users)
+  fs.writeFileSync('./lib/users.json', users)
+
+  console.log(users)
+
+  res.redirect('/');
+})
 
 app.listen(port, () => {
   console.log('Listening on port ' + port + '.');
