@@ -49,16 +49,17 @@ app.get('/', (req, res) => {
 
   res.status(200);
 
+  session = req.session;
+
   if (req.session.userid) {
     res.render('home.hbs', {
-      user:req.session.userid,
+      username:session.userid,
       validUser:true,
       pageTitle:'Home Page',
       welcomeMessage: 'Welcome, ' + req.session.userid,
     });
   } else {
     res.render('home.hbs', {
-      validUser:false,
       pageTitle:'Home Page',
       welcomeMessage:'Welcome to my Website!',
     });
@@ -66,34 +67,64 @@ app.get('/', (req, res) => {
 });
 
 app.post('/process-login', (req, res) => {
-  if (req.body.username === myusername && req.body.password === mypassword) {
+
+  // FIRST: check if login attempt is done by ADMIN:
+  if (req.body.username === 'admin' && req.body.password === 'pswd') {
     session = req.session;
     session.userid = req.body.username;
     res.render('home.hbs', {
-      validUser:true,
+      username:req.session.userid,
       pageTitle:'Home Page',
       welcomeMessage: 'Welcome, ' + req.session.userid,
     });
   } else {
     res.redirect('/')
   }
+
 })
 
 app.get('/about', (req, res) => {
+  session = req.session;
+
   res.render('about.hbs', {
     pageTitle:'About Page',
+    username:session.userid,
   });
 });
 
 app.get('/projects', (req, res) => {
+  session = req.session;
+
   res.render('projects.hbs', {
     pageTitle:'Projects',
+    username:session.userid,
   });
 });
 
 app.get('/api', (req, res) => {
+  session = req.session;
+
   res.render('api.hbs', {
     pageTitle:'API',
+    username:session.userid,
+  });
+});
+
+app.get('/user', (req, res) => {
+  session = req.session;
+
+  res.render('user.hbs', {
+    pageTitle:'User\'s Homepage',
+    username:session.userid,
+  });
+});
+
+app.get('/signup', (req, res) => {
+  session = req.session;
+
+  res.render('signup.hbs', {
+    pageTitle:'Signup Here',
+    username:session.userid,
   });
 });
 

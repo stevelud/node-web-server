@@ -9,6 +9,17 @@
    -->
 </head>
 <body>
+
+  {{>header}}
+
+  {{#unless username}}
+  {{>loginform}}
+  {{/unless}}
+
+  {{#if username}}
+  {{>logout username=username}}
+  {{/if}}
+
   <h1>We'll be right back!</h1>
   <p>
     The site is currently being updated.

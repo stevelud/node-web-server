@@ -28,7 +28,16 @@ form {
   margin:auto;
 }
 
+form[action="/signup-user"] {
+  width:18%;
+  background-color:'dark blue';
+}
+form[action="/signup-user"] input[type="text"] {
+  margin-bottom:1em;
+}
+
 main {
   max-width:60%;
+  padding:2%;
   margin:auto;
 }

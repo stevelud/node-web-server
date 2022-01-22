@@ -11,8 +11,15 @@
 </head>
 <body>
 
-    {{>header}}
-    {{>loginform}}
+  {{>header}}
+
+  {{#unless username}}
+  {{>loginform}}
+  {{/unless}}
+
+  {{#if username}}
+  {{>logout username=username}}
+  {{/if}}
 
     <main>
       <p>Under construction...</p>

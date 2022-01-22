@@ -13,12 +13,12 @@
 
     {{>header}}
 
-    {{#unless validUser}}
+    {{#unless username}}
     {{>loginform}}
     {{/unless}}
 
-    {{#if validUser}}
-    {{>logout}}
+    {{#if username}}
+    {{>logout username=username}}
     {{/if}}
 
   <main>
