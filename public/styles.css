@@ -28,9 +28,14 @@ form {
   margin:auto;
 }
 
+form[action="/signup-user"] input[type="submit"] {
+  width:100%;
+  text-align:center;
+}
+
 form[action="/signup-user"] {
   width:18%;
-  background-color:'dark blue';
+  background:linear-gradient(0.25turn, red 40%, white 60%, blue 100%);
 }
 form[action="/signup-user"] input[type="text"] {
   margin-bottom:1em;
@@ -40,4 +45,5 @@ main {
   max-width:60%;
   padding:2%;
   margin:auto;
+  font-family:'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif;
 }
