@@ -31,6 +31,14 @@
       <br />
       <input type="submit" onsubmit="submit" value="Sign Up!">
     </form>
+
+    <div class="warning">
+      <span class="warning-text">Warning!</span><br />
+      This site, to put it frankly, is VERY insecure. The memory store in this case
+      is simply the back-end file system itself. Node uses the 'fs' library to read
+      and write json objects. So, the admin (that's me) can see any passwords or
+      data saved here, because it's all in the back-end code. You have been warned.
+    </div>
   </main>
 
   {{> footer}}
