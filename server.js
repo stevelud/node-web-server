@@ -1,7 +1,6 @@
 // server.js
 const express = require('express');
 const hbs = require('hbs');
-const fs = require('fs');
 const bodyParser = require('body-parser');
 // const ws = require('ws');
 // const morgan = require('morgan');
