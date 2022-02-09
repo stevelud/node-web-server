@@ -68,22 +68,8 @@ app.get('/', (req, res) => {
   }
 });
 
-app.post('/process-login', (req, res) => {
+app.post('/process-login', handlers.processLogin)
 
-  // FIRST: check if login attempt is done by ADMIN:
-  if (req.body.username === 'admin' && req.body.password === 'pswd') {
-    session = req.session;
-    session.userid = req.body.username;
-    res.render('home.hbs', {
-      username:req.session.userid,
-      pageTitle:'Home Page',
-      welcomeMessage: 'Welcome, ' + req.session.userid,
-    });
-  } else {
-    res.redirect('/')
-  }
-
-})
 
 app.get('/about', (req, res) => {
   session = req.session;
@@ -94,6 +80,7 @@ app.get('/about', (req, res) => {
   });
 });
 
+
 app.get('/projects', (req, res) => {
   session = req.session;
 
@@ -102,6 +89,7 @@ app.get('/projects', (req, res) => {
     username:session.userid,
   });
 });
+
 
 app.get('/api', (req, res) => {
   session = req.session;
@@ -135,34 +123,8 @@ app.post('/logout', (req,res) => {
     res.redirect('/');
 });
 
-app.post('/signup-user', (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
+app.post('/signup-user', handlers.signupUser)
 
-  // STEP 1 - validate password
-
-  // STEP 2 - check if username already exists
-
-  // STEP 3 - fetch users array, append user to it,
-
-  let arr;
-  let newUser = {};
-
-  let users = fs.readFileSync('./lib/users.json', 'utf8');
-  users = JSON.parse(users);
-  console.log(users)
-
-  newUser.userName = username;
-  newUser.password = password;
-
-  users.push(newUser);
-  users = JSON.stringify(users)
-  fs.writeFileSync('./lib/users.json', users)
-
-  console.log(users)
-
-  res.redirect('/');
-})
 
 app.listen(port, () => {
   console.log('Listening on port ' + port + '.');

@@ -45,7 +45,7 @@ main {
   max-width:60%;
   padding:2%;
   margin:auto;
-  font-family:'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif;
+  font-family:Garamond,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif;
 }
 
 .warning {
