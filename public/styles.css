@@ -65,3 +65,16 @@ main {
   font-weight:bold;
   height:1.3em;
 }
+
+.signupWarning {
+  display:block;
+  margin:auto;
+  margin-top:1em;
+  padding:.3em;
+  border:2px;
+  border-style:solid;
+  border-color:red;
+  background-color:white;
+  width:20%;
+  text-align:center;
+}
