@@ -44,85 +44,28 @@ app.use(expressSession({
 }));
 
 
-///*******************************************//
+///********************  HANDLERS   ***********************************//
 
-app.get('/', (req, res) => {
+app.get('/', handlers.handleHomePage);
 
-  res.status(200);
+app.post('/process-login', handlers.processLogin);
 
-  session = req.session;
+app.get('/about', handlers.handleAboutPage);
 
-  if (req.session.userid) {
-    res.render('home.hbs', {
-      username:session.userid,
-      validUser:true,
-      pageTitle:'Home Page',
-      welcomeMessage: 'Welcome, ' + req.session.userid,
-    });
-  } else {
-    res.render('home.hbs', {
-      pageTitle:'Home Page',
-      welcomeMessage:'Welcome to my Website!',
-    });
-  }
-});
+app.get('/projects', handlers.handleProjectPage);
 
-app.post('/process-login', handlers.processLogin)
+app.get('/user', handlers.handleUserPage);
 
+app.get('/signup', handlers.handleSignupPage);
 
-app.get('/about', (req, res) => {
-  session = req.session;
-
-  res.render('about.hbs', {
-    pageTitle:'About Page',
-    username:session.userid,
-  });
-});
-
-
-app.get('/projects', (req, res) => {
-  session = req.session;
-
-  res.render('projects.hbs', {
-    pageTitle:'Projects',
-    username:session.userid,
-  });
-});
-
-
-app.get('/api', (req, res) => {
-  session = req.session;
-
-  res.render('api.hbs', {
-    pageTitle:'API',
-    username:session.userid,
-  });
-});
-
-app.get('/user', (req, res) => {
-  session = req.session;
-
-  res.render('user.hbs', {
-    pageTitle:'User\'s Homepage',
-    username:session.userid,
-  });
-});
-
-app.get('/signup', (req, res) => {
-  session = req.session;
-
-  res.render('signup.hbs', {
-    pageTitle:'Signup Here',
-    username:session.userid,
-  });
-});
+app.post('/signup-user', handlers.signupUser)
 
 app.post('/logout', (req,res) => {
     req.session.destroy(); // session is ended; cookies on client-side are deleted
     res.redirect('/');
 });
 
-app.post('/signup-user', handlers.signupUser)
+///********************************************************************//
 
 
 app.listen(port, () => {
