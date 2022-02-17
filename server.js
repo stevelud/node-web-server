@@ -14,15 +14,16 @@ var app = express('view engine', 'hbs');
 var port = process.env.PORT || 8080;
 
 hbs.registerPartials(__dirname + '/views/partials');
+
+hbs.registerHelper('getCurrentYear', () => {
+  return new Date().getFullYear()
+});
+
 app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static(__dirname + '/public'));
-
-hbs.registerHelper('getCurrentYear', () => {
-  return new Date().getFullYear()
-});
 
 app.use(cookieParser());
 
