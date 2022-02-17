@@ -1,5 +1,6 @@
 body {
   background-image: linear-gradient(to right, lightskyblue, lightblue);
+  margin:0;
 }
 header, footer {
   text-align:center;
@@ -7,7 +8,7 @@ header, footer {
   background-color:blue;
   padding:5px;
   color:white;
-  max-width:75%;
+  width:100%;
   margin:auto;
 }
 header {
@@ -24,7 +25,8 @@ form {
   background-color:blue;
   padding:5px;
   color:white;
-  max-width:75%;
+  /*max-width:75%;*/
+  width:100%;
   margin:auto;
 }
 
