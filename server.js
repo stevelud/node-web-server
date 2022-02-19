@@ -8,6 +8,7 @@ const expressSession = require('express-session')
 const cookieParser = require('cookie-parser')
 const handlers = require('./lib/handlers.js')
 
+//require('./lib/wordoftheday.js')
 
 // no arguments needed to pass to express:
 var app = express('view engine', 'hbs');
@@ -29,10 +30,6 @@ app.use(cookieParser());
 
 //** LOGIN section of server ************** //
 
-// TEMP/PRACTICE: username and password
-const myusername = 'admin'
-const mypassword = 'pswd'
-
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
 
@@ -44,7 +41,6 @@ app.use(expressSession({
     resave: false
 }));
 
-
 ///********************  HANDLERS   ***********************************//
 
 app.get('/', handlers.handleHomePage);
@@ -53,11 +49,11 @@ app.post('/process-login', handlers.processLogin);
 
 app.get('/about', handlers.handleAboutPage);
 
-app.get('/projects', handlers.handleProjectPage);
-
 app.get('/user', handlers.handleUserPage);
 
 app.get('/signup', handlers.handleSignupPage);
+
+app.get('/wordgame', handlers.handleWordgamePage);
 
 app.post('/signup-user', handlers.signupUser)
 
@@ -67,7 +63,6 @@ app.post('/logout', (req,res) => {
 });
 
 ///********************************************************************//
-
 
 app.listen(port, () => {
   console.log('Listening on port ' + port + '.');

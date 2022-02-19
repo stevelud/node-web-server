@@ -20,7 +20,8 @@ header a {
 form div {
   margin-left:20px;
 }
-form {
+
+form[action="/signup-user"] {
   font-family:monospace;
   background-color:blue;
   padding:5px;
@@ -28,6 +29,21 @@ form {
   /*max-width:75%;*/
   width:100%;
   margin:auto;
+}
+
+form[action="/process-login"], form[action="/logout"] {
+  font-family:monospace;
+  background-color:blue;
+  padding:5px;
+  color:white;
+  /*max-width:75%;*/
+  width:100%;
+  margin:auto;
+}
+
+form[action="/process-login"]  input[type="text"],
+  form[action="/process-login"]  input[type="password"] {
+  width:80px;
 }
 
 form[action="/signup-user"] input[type="submit"] {
