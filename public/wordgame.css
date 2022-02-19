@@ -1,0 +1,98 @@
+body {
+  padding:3em;
+}
+.GameContainer {
+  width:60%;
+  min-width:900px;
+  margin:auto;
+  padding:.5em;
+  background-color:lightgrey;
+  overflow:auto;
+  border-radius:.5em;
+}
+.WordBar div {
+  display:inline-block;
+  margin-top:.2em;
+}
+.LetterUnit {
+  min-height:1.6em;
+  min-width:1.3em;
+  padding:.5em;
+  margin-right:.2em;
+  text-align:center;
+  background-color:white;
+  border:2px solid black;
+  font-weight:900;
+  border-radius:.3em;
+}
+.LetterUnit:hover {
+  background-color:black;
+  color:white;
+}
+.Keyboard .LetterUnit {
+  min-height:.8em;
+  min-width:.6em;
+  padding:.5em;
+  display:inline-block;
+  border:none;
+  background-color:clear;
+  margin-top:.2em;
+}
+input[type="text"] {
+  margin-right:8px;
+  height:2.6em;
+  border-radius:5px;
+  padding-left:2em;
+  font-weight:bolder;
+}
+button {
+  height:3em;
+  width:100px;
+  border-radius:5px;
+  background-color: white;
+  color:black;
+}
+button:hover {
+  background-color:black;
+  color:white;
+}
+button:active {
+  background-color:blue;
+}
+.col1 {
+  min-width:65%;
+  display:inline-block;
+  float:left;
+}
+.col2 {
+  /*width:35%;*/
+  display:inline-block;
+  float:left;
+}
+.kbrow2 {
+  margin-left:1em;
+}
+.kbrow3 {
+  margin-left:2.2em;
+}
+.GuessCounterBar {
+  color:red;
+  font-weight:bolder;
+  margin-top:.7em;
+}
+.Message {
+  margin-left:1em;
+  color:blue;
+  font-weight:bolder;
+}
+.hidden {
+  visibility:hidden;
+}
+.badGuessLetter {
+  background-color:red;
+  color:white;
+}
+.goodGuessLetter {
+  background-color:green;
+  color:white;
+}
