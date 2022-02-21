@@ -86,7 +86,7 @@
        margin-left:2.2em;
      }
      .GuessCounterBar {
-       color:red;
+       color:black;
        font-weight:bolder;
        margin-top:.7em;
      }
@@ -109,7 +109,7 @@
      .dictionary-row {
        margin-top:.4em;
        min-height:6em;
-       /*visibility:hidden;*/
+       visibility:hidden;
      }
      .dictionary-row h3 {
        font-style:italic;
@@ -127,13 +127,27 @@
       <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
       <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
 
-
       <!-- Babel -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
 
       <script type="text/babel">
-        let word = "{{word}}"
-        console.log(word);
+      /*
+      let path = 'http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=conga&format=json';
+
+      async function getWordData(url) {
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+        });
+        return response.json();  // parses JSON response into native JS object
+      }
+
+      getWordData(path)
+          .then(data => {
+            console.log(data)
+          })
+      */
 
         let alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
           'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
@@ -144,7 +158,7 @@
             super(props)
             this.state = {
               guess: "",
-              word: this.props.word,
+              word: "",
               lettersGuessed: [],
               guessesLeft: 4,
               message:"",
@@ -153,6 +167,17 @@
             this.guessLetter = this.guessLetter.bind(this)
             this.handleChange = this.handleChange.bind(this)
             this.handleClick = this.handleClick.bind(this)
+            this.handleKeyDown = this.handleKeyDown.bind(this)
+
+            // retrieve word, and dictionary definition data for word
+            fetch("https://random-word-api.herokuapp.com/word?number=1&swear=0")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data[0])
+                    this.setState({
+                      word: data[0],
+                    })
+                });
           }
 
           handleChange(event) {
@@ -163,25 +188,19 @@
             event.target.value = "";
             this.setState({ guess: event.target.value })
           }
-
-          // retrieve dictionary definition data for word
-          componentWillMount() {
-
-            let path = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
-            path = path + this.state.word;
-
-            fetch(path)
-                .then(response => response.json())
-                .then(function(data) {
-                  if (!data) {
-                    console.log(data[0]);
-                    console.log(data[0].word);
-                  } else {
-                    console.log("no dictionary definition found")
-                  }
-                });
-
+          handleKeyDown(event) {
+            if (event.keyCode == 13 && this.state.guessesLeft > 0) {    //enter
+              this.guessLetter()
+            }
           }
+          componentDidMount() {
+            document.addEventListener('keydown', this.handleKeyDown);
+          }
+
+          componentWillUnMount() {
+            document.removeEventlistener('keydown', this.handleKeyDown);
+          }
+
 
           guessLetter() {
             // TO DO: include a sub method that, if the guess is wrong,
@@ -202,7 +221,7 @@
             }
 
             if (g === "") {
-              return this.setState({ message: "You didn't actually make a guess!" })
+              return this.setState({ message: "You didn't make a guess!" })
             }
 
             if (!alphabet.includes(g)) {
@@ -219,11 +238,13 @@
                 return this.setState({
                   message: "Congratulations! You got it!!",
                   gameOver:true,
+                  guess:"",
                 })
               } else {
                 return this.setState({
                   lettersGuessed: guesses,
                   message: "Good guess! The letter " + g + " is in the word.",
+                  guess: "",
                   });
               }
             } else if (this.state.guessesLeft > 1) {
@@ -232,6 +253,7 @@
                 lettersGuessed: guesses,
                 guessesLeft: guessesLeft - 1,
                 message: "Bad guess. The letter " + g + " is not in the word.",
+                guess: "",
               })
             } else {
               return this.setState({
@@ -245,6 +267,11 @@
             console.log(this.state.lettersGuessed)
           }
 
+          /*
+          componentWillUpdate() {
+            fetch.
+          }
+          */
           render() {
             let handleGuess;
             if (!this.state.gameOver) {
@@ -261,9 +288,10 @@
                                  buttonHandler={handleGuess}
                                  inputHandler={this.handleChange}
                                  handleClick={this.handleClick}
-                                 message={this.state.message} />
+                                 message={this.state.message}
+                                 guess={this.state.guess} />
                     <GuessCounterBar guessesLeft={this.state.guessesLeft} />
-                    <WordBar word={this.props.word}
+                    <WordBar word={this.state.word}
                              lettersGuessed={this.state.lettersGuessed} />
                   </div>
                   <div className="col2">
@@ -290,7 +318,8 @@
         const PlayerFrame = (props) => {
           return (
              <div className="PlayerFrame">
-               <GuessBar inputHandler={props.inputHandler} handleClick={props.handleClick} />
+               <GuessBar inputHandler={props.inputHandler} handleClick={props.handleClick}
+                  guess={props.guess} />
                <GuessButton buttonHandler={props.buttonHandler} />
                <MessageBar message={props.message} />
              </div>
@@ -306,7 +335,7 @@
         const GuessBar = (props) => {
           return <input type="text" size="5" maxLength="1"
             placeholder="" onChange={props.inputHandler}
-            onClick={props.handleClick} />
+            onClick={props.handleClick} value={props.guess} />
         }
 
         const GuessCounterBar = (props) => {
@@ -390,7 +419,7 @@
           )
         }
 
-        ReactDOM.render(<GameContainer name="" word={word} />,
+        ReactDOM.render(<GameContainer />,
             document.getElementById('target-one'))
       </script>
 

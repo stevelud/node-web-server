@@ -57,6 +57,8 @@ app.get('/wordgame', handlers.handleWordgamePage);
 
 app.post('/signup-user', handlers.signupUser)
 
+//app.post('/saveWordgameState', handlers.saveWordgameState)
+
 app.post('/logout', (req,res) => {
     req.session.destroy(); // session is ended; cookies on client-side are deleted
     res.redirect('/');
