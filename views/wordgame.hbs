@@ -11,9 +11,9 @@
      body {
        padding:3em;
      }
-     .GameContainer {
+     .GameContainer, .dictionary-row {
        width:60%;
-       min-width:900px;
+       min-width:1000px;
        margin:auto;
        padding:.5em;
        background-color:lightgrey;
@@ -106,6 +106,16 @@
        background-color:green;
        color:white;
      }
+     .dictionary-row {
+       margin-top:.4em;
+       min-height:6em;
+       /*visibility:hidden;*/
+     }
+     .dictionary-row h3 {
+       font-style:italic;
+       text-decoration:underline;
+       margin-left:2em;
+     }
    </style>
 
 <body>
@@ -144,6 +154,7 @@
             this.handleChange = this.handleChange.bind(this)
             this.handleClick = this.handleClick.bind(this)
           }
+
           handleChange(event) {
             this.setState({ guess: event.target.value })
             console.log(event.target.value)
@@ -151,6 +162,25 @@
           handleClick(event) {
             event.target.value = "";
             this.setState({ guess: event.target.value })
+          }
+
+          // retrieve dictionary definition data for word
+          componentWillMount() {
+
+            let path = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+            path = path + this.state.word;
+
+            fetch(path)
+                .then(response => response.json())
+                .then(function(data) {
+                  if (!data) {
+                    console.log(data[0]);
+                    console.log(data[0].word);
+                  } else {
+                    console.log("no dictionary definition found")
+                  }
+                });
+
           }
 
           guessLetter() {
@@ -207,7 +237,8 @@
               return this.setState({
                 lettersGuessed: guesses,
                 guessesLeft: guessesLeft - 1,
-                message: "Oh no! You're all out of guesses. The word is " + this.state.word + ".",
+                message: "Oh no! No more guesses." +
+                " The word is " + this.state.word + ".",
                 gameOver:true,
               })
             }
@@ -223,24 +254,37 @@
             }
 
             return (
-              <div className="GameContainer">
-                <div className="col1">
-                  <PlayerFrame playerName="Human"
-                               buttonHandler={handleGuess}
-                               inputHandler={this.handleChange}
-                               handleClick={this.handleClick}
-                               message={this.state.message} />
-                  <GuessCounterBar guessesLeft={this.state.guessesLeft} />
-                  <WordBar word={this.props.word}
-                           lettersGuessed={this.state.lettersGuessed} />
+              <div>
+                <div className="GameContainer">
+                  <div className="col1">
+                    <PlayerFrame playerName="Human"
+                                 buttonHandler={handleGuess}
+                                 inputHandler={this.handleChange}
+                                 handleClick={this.handleClick}
+                                 message={this.state.message} />
+                    <GuessCounterBar guessesLeft={this.state.guessesLeft} />
+                    <WordBar word={this.props.word}
+                             lettersGuessed={this.state.lettersGuessed} />
+                  </div>
+                  <div className="col2">
+                    <Keyboard lettersGuessed={this.state.lettersGuessed}
+                              word={this.state.word} />
+                  </div>
                 </div>
-                <div className="col2">
-                  <Keyboard lettersGuessed={this.state.lettersGuessed}
-                            word={this.state.word} />
+                <div className="dictionary-row">
+                  <DictionaryRow word={this.state.word} />
                 </div>
               </div>
             )
           }
+        }
+
+        const DictionaryRow = (props) => {
+          return (
+            <div>
+              <h3>{props.word}</h3>
+            </div>
+          )
         }
 
         const PlayerFrame = (props) => {
