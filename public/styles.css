@@ -2,7 +2,7 @@ body {
   background-image: linear-gradient(to right, lightskyblue, lightblue);
   margin:0;
 }
-header, footer {
+header {
   text-align:center;
   font-family:monospace;
   background-color:blue;
@@ -95,4 +95,15 @@ main {
   background-color:white;
   width:20%;
   text-align:center;
+}
+
+footer {
+  position:absolute;
+  bottom:0;
+  text-align:center;
+  font-family:monospace;
+  background-color:blue;
+  padding:5px;
+  color:white;
+  width:100%;
 }
