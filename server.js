@@ -6,12 +6,13 @@ const bodyParser = require('body-parser');
 // const morgan = require('morgan');
 const expressSession = require('express-session')
 const cookieParser = require('cookie-parser')
-const handlers = require('./lib/handlers.js')
+const handlers = require('./lib/routes.js')
 
 
 // no arguments needed to pass to express:
 var app = express('view engine', 'hbs');
 var port = process.env.PORT || 8080;
+
 
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -44,6 +45,7 @@ app.use(expressSession({
 
 ///********************  HANDLERS   ***********************************//
 
+
 // require('./routes.js')(app)
 
 app.get('/', handlers.handleHomePage)
@@ -62,7 +64,7 @@ app.post('/signup-user', handlers.signupUser)
 
 //app.post('/saveWordgameState/:user', handlers.saveWordgameState)
 
-//app.post('/stats/:user, handlers.getUserStats')
+//app.get('/stats/:user, handlers.getUserStats')
 
 app.post('/logout', (req,res) => {
     req.session.destroy(); // session is ended; cookies on client-side are deleted
@@ -70,6 +72,8 @@ app.post('/logout', (req,res) => {
 });
 
 ///********************************************************************//
+
+
 
 app.listen(port, () => {
   console.log('Listening on port ' + port + '.');
