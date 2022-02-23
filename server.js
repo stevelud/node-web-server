@@ -8,7 +8,6 @@ const expressSession = require('express-session')
 const cookieParser = require('cookie-parser')
 const handlers = require('./lib/handlers.js')
 
-//require('./lib/wordoftheday.js')
 
 // no arguments needed to pass to express:
 var app = express('view engine', 'hbs');
@@ -28,7 +27,8 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(cookieParser());
 
-//** LOGIN section of server ************** //
+//*********************  SESSION  ********************* //
+
 
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
@@ -41,23 +41,28 @@ app.use(expressSession({
     resave: false
 }));
 
+
 ///********************  HANDLERS   ***********************************//
 
-app.get('/', handlers.handleHomePage);
+// require('./routes.js')(app)
 
-app.post('/process-login', handlers.processLogin);
+app.get('/', handlers.handleHomePage)
 
-app.get('/about', handlers.handleAboutPage);
+app.post('/process-login', handlers.processLogin)
 
-app.get('/user', handlers.handleUserPage);
+app.get('/about', handlers.handleAboutPage)
 
-app.get('/signup', handlers.handleSignupPage);
+app.get('/user', handlers.handleUserPage)
 
-app.get('/wordgame', handlers.handleWordgamePage);
+app.get('/signup', handlers.handleSignupPage)
+
+app.get('/wordgame', handlers.handleWordgamePage)
 
 app.post('/signup-user', handlers.signupUser)
 
-//app.post('/saveWordgameState', handlers.saveWordgameState)
+//app.post('/saveWordgameState/:user', handlers.saveWordgameState)
+
+//app.post('/stats/:user, handlers.getUserStats')
 
 app.post('/logout', (req,res) => {
     req.session.destroy(); // session is ended; cookies on client-side are deleted

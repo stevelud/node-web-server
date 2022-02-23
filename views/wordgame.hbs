@@ -158,7 +158,7 @@
             super(props)
             this.state = {
               guess: "",
-              word: "",
+              word: "realizable",
               lettersGuessed: [],
               guessesLeft: 4,
               message:"",
@@ -169,8 +169,14 @@
             this.handleClick = this.handleClick.bind(this)
             this.handleKeyDown = this.handleKeyDown.bind(this)
 
+            /*
             // retrieve word, and dictionary definition data for word
-            fetch("https://random-word-api.herokuapp.com/word?number=1&swear=0")
+            fetch("https://random-word-api.herokuapp.com/word?number=1&swear=0", {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+              })
                 .then(response => response.json())
                 .then(data => {
                     console.log(data[0])
@@ -178,6 +184,7 @@
                       word: data[0],
                     })
                 });
+            */
           }
 
           handleChange(event) {
