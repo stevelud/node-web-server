@@ -109,12 +109,16 @@
      .dictionary-row {
        margin-top:.4em;
        min-height:6em;
-       visibility:hidden;
+       /*visibility:hidden;*/
+       font-family:sans-serif;
      }
      .dictionary-row h3 {
        font-style:italic;
        text-decoration:underline;
        margin-left:2em;
+     }
+     .dictionary-row div {
+       margin-left:3em;
      }
      .intro-row {
        margin-bottom:.4em;
@@ -162,7 +166,6 @@
         function getDefPath(word) {
           let path = 'https://api.datamuse.com/words?sp=' + word + '&md=d';
 
-
           return path;
           // example path:
           // https://api.datamuse.com/words?sp=nourishment&md=d
@@ -179,6 +182,8 @@
               guessesLeft: 4,
               message: "",
               gameOver:false,
+              dictionaryRowClass:"dictionary-row hidden",
+              wordDefs: "",
             }
             this.guessLetter = this.guessLetter.bind(this)
             this.handleChange = this.handleChange.bind(this)
@@ -199,7 +204,23 @@
 
                     console.log(data[i].word)
 
-                    console.log(getDefPath(data[i].word))
+                    // retrieve definition and meaning for word:
+                    let wordPath = getDefPath(data[i].word);
+
+                    console.log(wordPath)
+
+                    fetch(wordPath)
+                      .then(response => response.json())
+                      .then(data => {
+                        let defs = data[0].defs
+
+                        //console.log(defs)
+
+                        this.setState({ wordDefs: data[0].defs })
+
+                        console.log(this.state.wordDefs)
+
+                      })
 
                     this.setState({
                       word: data[i].word,
@@ -221,6 +242,7 @@
               this.guessLetter()
             }
           }
+
           componentDidMount() {
             document.addEventListener('keydown', this.handleKeyDown);
           }
@@ -268,6 +290,7 @@
                   message: "Congratulations! You got it!!",
                   gameOver:true,
                   guess:"",
+                  dictionaryRowClass: "dictionary-row"
                 })
               } else {
                 return this.setState({
@@ -291,6 +314,7 @@
                 message: "Oh no! No more guesses." +
                 " The word is " + this.state.word + ".",
                 gameOver:true,
+                dictionaryRowClass: "dictionary-row"
               })
             }
             console.log(this.state.lettersGuessed)
@@ -324,9 +348,9 @@
                               word={this.state.word} />
                   </div>
                 </div>
-                <div className="dictionary-row">
+                <div className={this.state.dictionaryRowClass}>
                   <DictionaryRow word={this.state.word}
-                                 gameOver={this.state.gameOver} />
+                                 defs={this.state.wordDefs} />
                 </div>
               </div>
             )
@@ -337,24 +361,29 @@
 
         // this component should appear visible when the game ends:
         const DictionaryRow = (props) => {
-          let def;
 
-          
-          // fetch definition from our free word API site:
-          if (props.gameOver) {
-              let path = getDefPath(props.word);
-              const response = fetch(path);
-              return response
-          }
-
+          //console.log(props.word)
+          //console.log(props.defs)
 
           return (
             <div>
               <h3>{props.word}</h3>
-              <p></p>
+              <div>{props.defs[0]}</div>
             </div>
           )
         }
+
+
+        const DefEntry = (props) => {
+          return (
+            <div>{props.num} {props.entry}</div>
+          )
+        }
+
+
+
+
+
 
         const PlayerFrame = (props) => {
           return (
@@ -406,7 +435,7 @@
 
           return (
             <div className="WordBar">
-              {wordArray.map((letter, i) => <LetterUnit key={i} letter={letter[0]}
+              {wordArray.map((letter, i) => <LetterUnit key={i} letter={letter[0].toUpperCase()}
                                               hidden={letter[1]} />)}
             </div>
           )
