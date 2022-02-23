@@ -70,7 +70,7 @@
        background-color:blue;
      }
      .col1 {
-       min-width:65%;
+       min-width:70%;
        display:inline-block;
        float:left;
      }
@@ -158,10 +158,10 @@
             super(props)
             this.state = {
               guess: "",
-              word: "realizable",
+              word: "",
               lettersGuessed: [],
               guessesLeft: 4,
-              message:"",
+              message: "",
               gameOver:false,
             }
             this.guessLetter = this.guessLetter.bind(this)
@@ -169,22 +169,35 @@
             this.handleClick = this.handleClick.bind(this)
             this.handleKeyDown = this.handleKeyDown.bind(this)
 
-            /*
+
             // retrieve word, and dictionary definition data for word
-            fetch("https://random-word-api.herokuapp.com/word?number=1&swear=0", {
-                method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors', // no-cors, *cors, same-origin
-                redirect: 'follow', // manual, *follow, error
-                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-              })
+            let i = Math.random(25);
+            i = Math.ceil(i);
+            let n = Math.random(6);
+            let questionString = "?";
+
+            while (n > 0) {
+              questionString += "?";
+              n = n - 1;
+            }
+
+            let firstLetter = alphabet[i];
+
+            let path = "https://api.datamuse.com/words?sp=" + firstLetter +
+              "????" +  questionString;
+
+            console.log(path);
+
+            fetch(path)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data[0])
+                    console.log(data[i].word)
+
                     this.setState({
-                      word: data[0],
+                      word: data[i].word,
                     })
+
                 });
-            */
           }
 
           handleChange(event) {
