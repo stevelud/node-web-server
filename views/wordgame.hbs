@@ -159,6 +159,15 @@
           return path;
         }
 
+        function getDefPath(word) {
+          let path = 'https://api.datamuse.com/words?sp=' + word + '&md=d';
+
+
+          return path;
+          // example path:
+          // https://api.datamuse.com/words?sp=nourishment&md=d
+        }
+
 
         class GameContainer extends React.Component {
           constructor(props) {
@@ -189,6 +198,8 @@
                     i = Math.floor(i);
 
                     console.log(data[i].word)
+
+                    console.log(getDefPath(data[i].word))
 
                     this.setState({
                       word: data[i].word,
@@ -314,7 +325,8 @@
                   </div>
                 </div>
                 <div className="dictionary-row">
-                  <DictionaryRow word={this.state.word} />
+                  <DictionaryRow word={this.state.word}
+                                 gameOver={this.state.gameOver} />
                 </div>
               </div>
             )
@@ -322,9 +334,21 @@
         }
 
         const DictionaryRow = (props) => {
+          let def;
+
+          /*
+          // fetch definition from our free word API site:
+          if (props.gameOver) {
+              let path = getDefPath(props.word);
+              const response = fetch(path);
+              return response
+          }
+          */
+
           return (
             <div>
               <h3>{props.word}</h3>
+              <p></p>
             </div>
           )
         }
