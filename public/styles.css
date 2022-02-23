@@ -98,6 +98,7 @@ main {
 }
 
 footer {
+  /* or should it be position:relative??? consider... */
   position:absolute;
   bottom:0;
   text-align:center;
