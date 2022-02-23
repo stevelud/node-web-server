@@ -11,7 +11,7 @@
      body {
        padding:3em;
      }
-     .GameContainer, .dictionary-row {
+     .GameContainer, .dictionary-row, .intro-row {
        width:60%;
        min-width:1000px;
        margin:auto;
@@ -116,6 +116,9 @@
        text-decoration:underline;
        margin-left:2em;
      }
+     .intro-row {
+       margin-bottom:.4em;
+     }
    </style>
 
 <body>
@@ -140,7 +143,8 @@
           // retrieve word, and dictionary definition data for word
           let i = 25*Math.random();
           i = Math.floor(i);
-          let n = Math.random(6);
+          let n = 6*Math.random();
+          n = Math.floor(n)
           let questionString = "?";
 
           while (n > 0) {
@@ -185,11 +189,11 @@
                     i = Math.floor(i);
 
                     console.log(data[i].word)
-                    
+
                     this.setState({
                       word: data[i].word,
                     })
-                    
+
                 });
           }
 
@@ -281,11 +285,7 @@
             console.log(this.state.lettersGuessed)
           }
 
-          /*
-          componentWillUpdate() {
-            fetch.
-          }
-          */
+
           render() {
             let handleGuess;
             if (!this.state.gameOver) {
