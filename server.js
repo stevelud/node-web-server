@@ -24,7 +24,7 @@ const oneDay = 1000 * 60 * 60 * 24;
 //session middleware
 app.use(expressSession({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized:true,
+    saveUninitialized: true,
     cookie: { maxAge: oneDay },
     resave: false
 }));
