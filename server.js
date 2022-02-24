@@ -6,30 +6,17 @@ const bodyParser = require('body-parser');
 // const morgan = require('morgan');
 const expressSession = require('express-session')
 const cookieParser = require('cookie-parser')
-const handlers = require('./lib/routes.js')
-
+const routes = require('./lib/routes.js')
 
 // no arguments needed to pass to express:
 var app = express('view engine', 'hbs');
 var port = process.env.PORT || 8080;
-
-
-hbs.registerPartials(__dirname + '/views/partials');
-
-hbs.registerHelper('getCurrentYear', () => {
-  return new Date().getFullYear()
-});
-
-app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static(__dirname + '/public'));
 
 app.use(cookieParser());
-
-//*********************  SESSION  ********************* //
-
 
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
@@ -42,36 +29,19 @@ app.use(expressSession({
     resave: false
 }));
 
+routes(app);
 
-///********************  HANDLERS   ***********************************//
+// HANDLEBARS **********************************************//
 
+hbs.registerPartials(__dirname + '/views/partials');
 
-// require('./routes.js')(app)
-
-app.get('/', handlers.handleHomePage)
-
-app.post('/process-login', handlers.processLogin)
-
-app.get('/about', handlers.handleAboutPage)
-
-app.get('/user', handlers.handleUserPage)
-
-app.get('/signup', handlers.handleSignupPage)
-
-app.get('/wordgame', handlers.handleWordgamePage)
-
-app.post('/signup-user', handlers.signupUser)
-
-//app.post('/saveWordgameState/:user', handlers.saveWordgameState)
-
-//app.get('/stats/:user, handlers.getUserStats')
-
-app.post('/logout', (req,res) => {
-    req.session.destroy(); // session is ended; cookies on client-side are deleted
-    res.redirect('/');
+hbs.registerHelper('getCurrentYear', () => {
+  return new Date().getFullYear()
 });
 
-///********************************************************************//
+app.set('view engine', 'hbs');
+
+//**********************************************************//
 
 
 

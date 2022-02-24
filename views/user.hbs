@@ -5,26 +5,16 @@
    <title>{{pageTitle}}</title>
 
    <link href="/styles.css" rel="stylesheet">
-   <!--
-   <script src="scripts.js"></script>
-   -->
+
 </head>
 <body>
 
-  {{>header}}
-
-  {{#unless username}}
-  {{>loginform}}
-  {{/unless}}
-
-  {{#if username}}
-  {{>logout username=username}}
-  {{/if}}
 
   <main>
   </main>
-  <!--
+
+
     {{>footer}}
-  -->
+
 </body>
 </html>

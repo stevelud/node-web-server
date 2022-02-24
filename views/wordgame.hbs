@@ -109,9 +109,9 @@
      .dictionary-row {
        margin-top:.4em;
        min-height:6em;
-       /*visibility:hidden;*/
        font-family:sans-serif;
        padding-bottom:2em;
+       padding-right:2em;
      }
      .dictionary-row h3 {
        font-style:italic;
@@ -122,6 +122,9 @@
        margin-left:3em;
      }
      .intro-row {
+       margin-bottom:.4em;
+     }
+     .DefEntry {
        margin-bottom:.4em;
      }
    </style>
@@ -364,7 +367,7 @@
         const DictionaryRow = (props) => {
 
           let defsArray = Array.from(props.defs);
-          console.log("Defs Array: " + defsArray)
+          //console.log("Defs Array: " + defsArray)
 
           return (
             <div>
@@ -377,7 +380,7 @@
 
         const DefEntry = (props) => {
           return (
-            <div>{props.num} {props.entry}</div>
+            <div className="DefEntry">{props.num} {props.entry}</div>
           )
         }
 
