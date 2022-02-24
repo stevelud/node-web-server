@@ -111,6 +111,7 @@
        min-height:6em;
        /*visibility:hidden;*/
        font-family:sans-serif;
+       padding-bottom:2em;
      }
      .dictionary-row h3 {
        font-style:italic;
@@ -212,9 +213,9 @@
                     fetch(wordPath)
                       .then(response => response.json())
                       .then(data => {
-                        let defs = data[0].defs
 
-                        //console.log(defs)
+                        // this should be an array
+                        let defs = data[0].defs
 
                         this.setState({ wordDefs: data[0].defs })
 
@@ -362,13 +363,13 @@
         // this component should appear visible when the game ends:
         const DictionaryRow = (props) => {
 
-          //console.log(props.word)
-          //console.log(props.defs)
+          let defsArray = Array.from(props.defs);
+          console.log("Defs Array: " + defsArray)
 
           return (
             <div>
               <h3>{props.word}</h3>
-              <div>{props.defs[0]}</div>
+              {defsArray.map((entry, i) => <DefEntry num={i+1} key={i} entry={entry} />)}
             </div>
           )
         }
