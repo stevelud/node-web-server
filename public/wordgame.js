@@ -63,7 +63,7 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
       guess: "",
       word: "",
       lettersGuessed: [],
-      guessesLeft: 10,
+      guessesLeft: 11,
       message: "",
       gameOver: false,
       dictionaryRowClass: "dictionary-row hidden",
@@ -109,7 +109,10 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
     });
     /* TESTING COMMUNICATION WITH SERVER */
 
-    fetch('/wg');
+    fetch('/wg', {
+      method: "POST",
+      body: JSON.stringify(_this.state)
+    });
     return _this;
   }
 
@@ -132,7 +135,7 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "handleKeyDown",
     value: function handleKeyDown(event) {
-      if (event.keyCode == 13 && this.state.guessesLeft > 0) {
+      if (event.keyCode == 13 && this.state.guessesLeft > 0 && !this.state.gameOver) {
         //enter
         this.guessLetter();
       }
@@ -419,4 +422,4 @@ var Keyboard = function Keyboard(props) {
   })));
 };
 
-ReactDOM.render( /*#__PURE__*/React.createElement(GameContainer, null), document.getElementById('target-one'));
+ReactDOM.render( /*#__PURE__*/React.createElement(GameContainer, null), document.getElementById('target'));

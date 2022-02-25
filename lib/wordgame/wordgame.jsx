@@ -38,7 +38,7 @@ constructor(props) {
     guess: "",
     word: "",
     lettersGuessed: [],
-    guessesLeft: 10,
+    guessesLeft: 11,
     message: "",
     gameOver:false,
     dictionaryRowClass:"dictionary-row hidden",
@@ -90,9 +90,13 @@ constructor(props) {
 
       });
 
-
   /* TESTING COMMUNICATION WITH SERVER */
-  fetch('/wg');
+  fetch('/wg', {
+    method:"POST",
+    body:JSON.stringify(this.state)
+  })
+
+
 }
 
 handleChange(event) {
@@ -104,7 +108,7 @@ handleClick(event) {
   this.setState({ guess: event.target.value })
 }
 handleKeyDown(event) {
-  if (event.keyCode == 13 && this.state.guessesLeft > 0) {    //enter
+  if (event.keyCode == 13 && this.state.guessesLeft > 0 && !this.state.gameOver) {    //enter
     this.guessLetter()
   }
 }
