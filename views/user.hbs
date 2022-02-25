@@ -9,8 +9,19 @@
 </head>
 <body>
 
+  {{>header}}
+
+  {{#unless username}}
+  {{>loginform}}
+  {{/unless}}
+
+  {{#if username}}
+  {{>logout username=username}}
+  {{/if}}
 
   <main>
+    
+
   </main>
 
 

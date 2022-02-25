@@ -117,7 +117,6 @@
 
        min-height:6em;
        font-family:sans-serif;
-
      }
      .dictionary-row h3 {
        font-style:italic;
@@ -189,7 +188,7 @@
               guess: "",
               word: "",
               lettersGuessed: [],
-              guessesLeft: 4,
+              guessesLeft: 10,
               message: "",
               gameOver:false,
               dictionaryRowClass:"dictionary-row hidden",
@@ -206,6 +205,7 @@
 
             console.log(path);
 
+            // retrive word and word definitions from Datamuse API
             fetch(path)
                 .then(response => response.json())
                 .then(data => {
@@ -230,6 +230,8 @@
 
                         console.log(this.state.wordDefs)
 
+                      }).catch((err) => {
+                        this.setState({ wordDefs: ["no definitions available"] })
                       })
 
                     this.setState({
@@ -239,8 +241,8 @@
                 });
 
 
-              /* TESTING COMMUNICATION WITH SERVER */
-              fetch('/wg');
+            /* TESTING COMMUNICATION WITH SERVER */
+            fetch('/wg');
           }
 
           handleChange(event) {
@@ -294,7 +296,12 @@
 
             if (guesses.includes(g)) {
               return this.setState({ message: "You already guessed " + g + ".",
-                                      guess: "" });
+                                  guess: "" });
+
+
+              // send game state to server to be saved for user
+              fetch.post('/sendWordGameState', { method: 'POST',
+                body: JSON.stringify(this.state) })
             }
 
             if (word.includes(g)) {
