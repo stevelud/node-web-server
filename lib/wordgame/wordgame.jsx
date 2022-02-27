@@ -3,52 +3,70 @@ let alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
 'v', 'w', 'x', 'y', 'z'];
 
 function getWordPath() {
-// retrieve word, and dictionary definition data for word
-let i = 25*Math.random();
-i = Math.floor(i);
-let n = 6*Math.random();
-n = Math.floor(n)
-let questionString = "?";
+    // retrieve word, and dictionary definition data for word
+    let i = 25*Math.random();
+    i = Math.floor(i);
+    let n = 6*Math.random();
+    n = Math.floor(n)
+    let questionString = "?";
 
-while (n > 0) {
-  questionString += "?";
-  n = n - 1;
-}
+    while (n > 0) {
+      questionString += "?";
+      n = n - 1;
+    }
 
-let firstLetter = alphabet[i];
+    let firstLetter = alphabet[i];
 
-let path = "https://api.datamuse.com/words?sp=" + firstLetter +
-  "????" +  questionString;
-return path;
+    let path = "https://api.datamuse.com/words?sp=" + firstLetter +
+      "????" +  questionString;
+
+    return path;
 }
 
 function getDefPath(word) {
-let path = 'https://api.datamuse.com/words?sp=' + word + '&md=d';
+    let path = 'https://api.datamuse.com/words?sp=' + word + '&md=d';
 
-return path;
-// example path:
-// https://api.datamuse.com/words?sp=nourishment&md=d
+    return path;
+    // example path:
+    // https://api.datamuse.com/words?sp=nourishment&md=d
 }
 
 
 class GameContainer extends React.Component {
-constructor(props) {
-  super(props)
-  this.state = {
-    guess: "",
-    word: "",
-    lettersGuessed: [],
-    guessesLeft: 11,
-    message: "",
-    gameOver:false,
-    dictionaryRowClass:"dictionary-row hidden",
-    wordDefs: "",
+  constructor(props) {
+    super(props)
+    this.state = {
+        guess: "",
+        word: "",
+        lettersGuessed: [],
+        guessesLeft: 11,
+        message: "",
+        gameOver:false,
+        dictionaryRowClass:"dictionary-row hidden",
+        wordDefs: "",
+    }
+    this.guessLetter = this.guessLetter.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
   }
-  this.guessLetter = this.guessLetter.bind(this)
-  this.handleChange = this.handleChange.bind(this)
-  this.handleClick = this.handleClick.bind(this)
-  this.handleKeyDown = this.handleKeyDown.bind(this)
 
+  handleChange(event) {
+      this.setState({ guess: event.target.value })
+      console.log(event.target.value)
+  }
+  handleClick(event) {
+      event.target.value = "";
+      this.setState({ guess: event.target.value })
+  }
+  handleKeyDown(event) {
+      if (event.keyCode == 13 && this.state.guessesLeft > 0 && !this.state.gameOver) {    //enter
+        this.guessLetter()
+      }
+  }
+
+componentDidMount() {
+  document.addEventListener('keydown', this.handleKeyDown);
 
   // retrieve word, and dictionary definition data for word
   let path = getWordPath();
@@ -91,30 +109,12 @@ constructor(props) {
       });
 
   /* TESTING COMMUNICATION WITH SERVER */
+  /*
   fetch('/wg', {
     method:"POST",
     body:JSON.stringify(this.state)
   })
-
-
-}
-
-handleChange(event) {
-  this.setState({ guess: event.target.value })
-  console.log(event.target.value)
-}
-handleClick(event) {
-  event.target.value = "";
-  this.setState({ guess: event.target.value })
-}
-handleKeyDown(event) {
-  if (event.keyCode == 13 && this.state.guessesLeft > 0 && !this.state.gameOver) {    //enter
-    this.guessLetter()
-  }
-}
-
-componentDidMount() {
-  document.addEventListener('keydown', this.handleKeyDown);
+*/
 }
 
 componentWillUnMount() {

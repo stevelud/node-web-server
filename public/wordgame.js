@@ -72,47 +72,7 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
     _this.guessLetter = _this.guessLetter.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
-    _this.handleKeyDown = _this.handleKeyDown.bind(_assertThisInitialized(_this)); // retrieve word, and dictionary definition data for word
-
-    var path = getWordPath();
-    console.log(path); // retrive word and word definitions from Datamuse API
-
-    fetch(path).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      var i = 25 * Math.random(25);
-      i = Math.floor(i);
-      console.log(data[i].word); // retrieve definition and meaning for word:
-
-      var wordPath = getDefPath(data[i].word);
-      console.log(wordPath);
-      fetch(wordPath).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        // this should be an array
-        var defs = data[0].defs;
-
-        _this.setState({
-          wordDefs: data[0].defs
-        });
-
-        console.log(_this.state.wordDefs);
-      })["catch"](function (err) {
-        _this.setState({
-          wordDefs: ["no definitions available"]
-        });
-      });
-
-      _this.setState({
-        word: data[i].word
-      });
-    });
-    /* TESTING COMMUNICATION WITH SERVER */
-
-    fetch('/wg', {
-      method: "POST",
-      body: JSON.stringify(_this.state)
-    });
+    _this.handleKeyDown = _this.handleKeyDown.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -143,7 +103,51 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      document.addEventListener('keydown', this.handleKeyDown);
+      var _this2 = this;
+
+      document.addEventListener('keydown', this.handleKeyDown); // retrieve word, and dictionary definition data for word
+
+      var path = getWordPath();
+      console.log(path); // retrive word and word definitions from Datamuse API
+
+      fetch(path).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        var i = 25 * Math.random(25);
+        i = Math.floor(i);
+        console.log(data[i].word); // retrieve definition and meaning for word:
+
+        var wordPath = getDefPath(data[i].word);
+        console.log(wordPath);
+        fetch(wordPath).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          // this should be an array
+          var defs = data[0].defs;
+
+          _this2.setState({
+            wordDefs: data[0].defs
+          });
+
+          console.log(_this2.state.wordDefs);
+        })["catch"](function (err) {
+          _this2.setState({
+            wordDefs: ["no definitions available"]
+          });
+        });
+
+        _this2.setState({
+          word: data[i].word
+        });
+      });
+      /* TESTING COMMUNICATION WITH SERVER */
+
+      /*
+      fetch('/wg', {
+        method:"POST",
+        body:JSON.stringify(this.state)
+      })
+      */
     }
   }, {
     key: "componentWillUnMount",
