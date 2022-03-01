@@ -95,7 +95,11 @@ class GameContainer extends React.Component {
                 // this should be an array
                 let defs = data[0].defs
 
-                this.setState({ wordDefs: data[0].defs })
+                if (!defs) {
+                  return this.setState({ wordDefs: [ "No dictionary definitions available." ]});
+                } else {
+                  return this.setState({ wordDefs: data[0].defs })
+                }
 
                 console.log(this.state.wordDefs)
 
@@ -180,8 +184,7 @@ class GameContainer extends React.Component {
       return this.setState({
         lettersGuessed: guesses,
         guessesLeft: guessesLeft - 1,
-        message: "Oh no! No more guesses." +
-        " The word is " + this.state.word + ".",
+        message: "No more guesses! The word is " + this.state.word + ".",
         gameOver:true,
         dictionaryRowClass: "dictionary-row"
       })
@@ -191,39 +194,39 @@ class GameContainer extends React.Component {
 
 
   render() {
-    let handleGuess;
-    if (!this.state.gameOver) {
-      handleGuess = this.guessLetter;
-    } else {
-      handleGuess = null;
-    }
+      let handleGuess;
+      if (!this.state.gameOver) {
+          handleGuess = this.guessLetter;
+      } else {
+          handleGuess = null;
+      }
 
     return (
-      <div>
-        <div className="GameContainer">
-          <div className="col1">
-            <PlayerFrame playerName="Human"
-                         buttonHandler={handleGuess}
-                         inputHandler={this.handleChange}
-                         handleClick={this.handleClick}
-                         message={this.state.message}
-                         guess={this.state.guess} />
-            <GuessCounterBar guessesLeft={this.state.guessesLeft} />
-            <WordBar word={this.state.word}
-                     lettersGuessed={this.state.lettersGuessed} />
+        <div>
+          <div className="GameContainer">
+            <div className="col1">
+              <PlayerFrame playerName="Human"
+                           buttonHandler={handleGuess}
+                           inputHandler={this.handleChange}
+                           handleClick={this.handleClick}
+                           message={this.state.message}
+                           guess={this.state.guess} />
+              <GuessCounterBar guessesLeft={this.state.guessesLeft} />
+              <WordBar word={this.state.word}
+                       lettersGuessed={this.state.lettersGuessed} />
+            </div>
+            <div className="col2">
+              <Keyboard lettersGuessed={this.state.lettersGuessed}
+                        word={this.state.word} />
+            </div>
           </div>
-          <div className="col2">
-            <Keyboard lettersGuessed={this.state.lettersGuessed}
-                      word={this.state.word} />
+          <div className={this.state.dictionaryRowClass}>
+            <DictionaryRow word={this.state.word}
+                           defs={this.state.wordDefs} />
           </div>
         </div>
-        <div className={this.state.dictionaryRowClass}>
-          <DictionaryRow word={this.state.word}
-                         defs={this.state.wordDefs} />
-        </div>
-      </div>
-    )
-}
+      )
+    }
 }
 
 
@@ -231,21 +234,21 @@ class GameContainer extends React.Component {
 // this component should appear visible when the game ends:
 const DictionaryRow = (props) => {
 
-let defsArray = Array.from(props.defs);
-//console.log("Defs Array: " + defsArray)
+    let defsArray = Array.from(props.defs);
+    //console.log("Defs Array: " + defsArray)
 
-return (
-  <div>
-    <h3>{props.word}</h3>
-    {defsArray.map((entry, i) => <DefEntry num={i+1} key={i} entry={entry} />)}
-  </div>
-)
+    return (
+        <div>
+            <h3>{props.word}</h3>
+            {defsArray.map((entry, i) => <DefEntry num={i+1} key={i} entry={entry} />)}
+        </div>
+    )
 }
 
 
 const DefEntry = (props) => {
     return (
-      <div className="DefEntry">{props.num} {props.entry}</div>
+        <div className="DefEntry">{props.num}  {props.entry}</div>
     )
 }
 

@@ -125,9 +125,15 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
           // this should be an array
           var defs = data[0].defs;
 
-          _this2.setState({
-            wordDefs: data[0].defs
-          });
+          if (!defs) {
+            return _this2.setState({
+              wordDefs: ["No dictionary definitions available."]
+            });
+          } else {
+            return _this2.setState({
+              wordDefs: data[0].defs
+            });
+          }
 
           console.log(_this2.state.wordDefs);
         })["catch"](function (err) {
@@ -219,7 +225,7 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
         return this.setState({
           lettersGuessed: guesses,
           guessesLeft: guessesLeft - 1,
-          message: "Oh no! No more guesses." + " The word is " + this.state.word + ".",
+          message: "No more guesses! The word is " + this.state.word + ".",
           gameOver: true,
           dictionaryRowClass: "dictionary-row"
         });
@@ -287,7 +293,7 @@ var DictionaryRow = function DictionaryRow(props) {
 var DefEntry = function DefEntry(props) {
   return /*#__PURE__*/React.createElement("div", {
     className: "DefEntry"
-  }, props.num, " ", props.entry);
+  }, props.num, "  ", props.entry);
 };
 
 var PlayerFrame = function PlayerFrame(props) {
