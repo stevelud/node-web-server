@@ -12,10 +12,14 @@ const routes = require('./lib/routes.js')
 var app = express('view engine', 'hbs');
 var port = process.env.PORT || 8080;
 
+
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static(__dirname + '/public'));
 
+
+
+// cookie middleware should come before session middleware
 app.use(cookieParser());
 
 // creating 24 hours from milliseconds

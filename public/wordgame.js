@@ -140,14 +140,6 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
           word: data[i].word
         });
       });
-      /* TESTING COMMUNICATION WITH SERVER */
-
-      /*
-      fetch('/wg', {
-        method:"POST",
-        body:JSON.stringify(this.state)
-      })
-      */
     }
   }, {
     key: "componentWillUnMount",
@@ -347,12 +339,15 @@ var WordBar = function WordBar(props) {
   var lettersGuessed = props.lettersGuessed; // this is an array of letters
 
   for (var i = 0; i < props.word.length; i++) {
-    if (lettersGuessed.includes(props.word[i])) {
-      wordArray.push([props.word[i], ""]);
+    if (props.word[i] === " ") {
+      wordArray.push([props.word[i], "", "space"]);
+    } else if (lettersGuessed.includes(props.word[i])) {
+      wordArray.push([props.word[i], "", ""]);
     } else {
-      wordArray.push([props.word[i], "hidden"]);
+      wordArray.push([props.word[i], "hidden", ""]);
     }
-  }
+  } //console.log(wordArray);
+
 
   return /*#__PURE__*/React.createElement("div", {
     className: "WordBar"
@@ -360,14 +355,15 @@ var WordBar = function WordBar(props) {
     return /*#__PURE__*/React.createElement(LetterUnit, {
       key: i,
       letter: letter[0].toUpperCase(),
-      hidden: letter[1]
+      hidden: letter[1],
+      space: letter[2]
     });
   }));
 };
 
 var LetterUnit = function LetterUnit(props) {
   return /*#__PURE__*/React.createElement("div", {
-    className: "LetterUnit"
+    className: props.space === "space" ? "LetterUnit hidden" : "LetterUnit"
   }, /*#__PURE__*/React.createElement("div", {
     className: props.hidden
   }, props.letter));
