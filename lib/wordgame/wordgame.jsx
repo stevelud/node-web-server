@@ -33,6 +33,7 @@ function getDefPath(word) {
 
 
 class GameContainer extends React.Component {
+
     constructor(props) {
       super(props)
       this.state = {
@@ -51,179 +52,204 @@ class GameContainer extends React.Component {
       this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
+
+
+
+
+
+    //EVENT METHODS ***************************************//
+
     handleChange(event) {
+
         this.setState({ guess: event.target.value })
         console.log(event.target.value)
+
     }
     handleClick(event) {
+
         event.target.value = "";
         this.setState({ guess: event.target.value })
+
     }
     handleKeyDown(event) {
-        if (event.keyCode == 13 && this.state.guessesLeft > 0 && !this.state.gameOver) {    //enter
+
+        //enter
+        if (event.keyCode == 13 && this.state.guessesLeft > 0 && !this.state.gameOver) {
           this.guessLetter()
         }
+
     }
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
 
 
-    // retrieve word, and dictionary definition data for word
-    let path = getWordPath();
 
-    console.log(path);
 
-    // retrive word and word definitions from Datamuse API
-    fetch(path)
-        .then(response => response.json())
-        .then(data => {
-            let i = 25*Math.random(25);
-            i = Math.floor(i);
+    //LIFECYCLE METHODS *******************************************//
 
-            console.log(data[i].word)
 
-            // retrieve definition and meaning for word:
-            let wordPath = getDefPath(data[i].word);
+    componentDidMount() {
+      document.addEventListener('keydown', this.handleKeyDown);
 
-            console.log(wordPath)
+      // retrieve word, and dictionary definition data for word
+      let path = getWordPath();
 
-            fetch(wordPath)
-              .then(response => response.json())
-              .then(data => {
+      console.log(path);
 
-                // this should be an array
-                let defs = data[0].defs
+      // retrive word and word definitions from Datamuse API
+      fetch(path)
+          .then(response => response.json())
+          .then(data => {
+              let i = 25*Math.random(25);
+              i = Math.floor(i);
 
-                if (!defs) {
-                  return this.setState({ wordDefs: [ "No dictionary definitions available." ]});
-                } else {
-                  return this.setState({ wordDefs: data[0].defs })
-                }
+              console.log(data[i].word)
 
-                console.log(this.state.wordDefs)
+              // retrieve definition and meaning for word:
+              let wordPath = getDefPath(data[i].word);
 
-              }).catch((err) => {
-                this.setState({ wordDefs: ["no definitions available"] })
+              console.log(wordPath)
+
+              fetch(wordPath)
+                .then(response => response.json())
+                .then(data => {
+
+                  // this should be an array
+                  let defs = data[0].defs
+
+                  if (!defs) {
+                    return this.setState({ wordDefs: [ "No dictionary definitions available." ]});
+                  } else {
+                    return this.setState({ wordDefs: data[0].defs })
+                  }
+
+                  console.log(this.state.wordDefs)
+
+                }).catch((err) => {
+                  this.setState({ wordDefs: ["no definitions available"] })
+                })
+
+              this.setState({
+                word: data[i].word,
               })
 
-            this.setState({
-              word: data[i].word,
-            })
+          });
 
-        });
-
-  }
-
-  componentWillUnMount() {
-      document.removeEventlistener('keydown', this.handleKeyDown);
-  }
-
-
-  guessLetter() {
-      // TO DO: include a sub method that, if the guess is wrong,
-      // flashes in red letters some msg like 'no bad guess!'
-
-      let g = this.state.guess;
-      let word = this.state.word;
-      let guesses = this.state.lettersGuessed;
-      let guessesLeft = this.state.guessesLeft;
+    }
 
 
 
-
-      function checkForCompletion(word, guesses) {
-          for (let i = 0; i<word.length; i++) {
-            if (!guesses.includes(word[i])) {
-              return false
-            }
-          }
-          return true
-      }
-
-      if (g === "") {
-          return this.setState({ message: "You didn't make a guess!" })
-      }
-
-      if (!alphabet.includes(g)) {
-          return this.setState({ message: "That is not actually a letter." })
-      }
-
-      if (guesses.includes(g)) {
-        return this.setState({ message: "You already guessed " + g + ".",
-                            guess: "" });
-      }
-
-      if (word.includes(g)) {
-        guesses.push(g);
-        if (checkForCompletion(word, guesses)) {
-
-          console.log("pre-stringified: " + this.state);
-
-          const w = JSON.stringify(this.state);
-
-          console.log("post-stringified: " + w);
+    componentWillUnMount() {
+        document.removeEventlistener('keydown', this.handleKeyDown);
+    }
 
 
-          fetch('/wg', {
-              method: 'POST',
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: w,
-            }).catch((error) => {
-                console.error('Error:', error);
+
+    componentDidUpdate() {
+
+        // send game state to server if game is over:
+        if (this.state.gameOver) {
+
+            let gameState = JSON.stringify(this.state);
+
+            fetch('/saveWordgameResult', {
+                method: 'POST',
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: gameState,
+              }).catch((error) => {
+                  console.error('Error:', error);
               });
 
-
-          return this.setState({
-            message: "Congratulations! You got it!!",
-            gameOver:true,
-            guess:"",
-            dictionaryRowClass: "dictionary-row"
-          })
-        } else {
-          return this.setState({
-            lettersGuessed: guesses,
-            message: "Good guess! The letter " + g + " is in the word.",
-            guess: "",
-            });
         }
-      } else if (this.state.guessesLeft > 1) {
-        guesses.push(g)
-        return this.setState({
-          lettersGuessed: guesses,
-          guessesLeft: guessesLeft - 1,
-          message: "Bad guess. The letter " + g + " is not in the word.",
-          guess: "",
-        })
-      } else {
 
-        console.log("pre-stringified: " + this.state);
+    }
 
-        const w = JSON.stringify(this.state);
 
-        console.log("post-stringified: " + w);
 
-        fetch('/wg', {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: w,
-          }).catch((error) => {
-              console.error('Error:', error);
-            });
+    // CLASS METHODS *********************************************//
 
-        return this.setState({
-          lettersGuessed: guesses,
-          guessesLeft: guessesLeft - 1,
-          message: "No more guesses! The word is " + this.state.word + ".",
-          gameOver:true,
-          dictionaryRowClass: "dictionary-row"
-        })
-      }
-      console.log(this.state.lettersGuessed)
+    guessLetter() {
+
+        let g = this.state.guess;
+        let word = this.state.word;
+        let guesses = this.state.lettersGuessed;
+        let guessesLeft = this.state.guessesLeft;
+
+
+        // make sure no capital letters get through:
+        g = g.toLowerCase();
+
+
+        function checkForCompletion(word, guesses) {
+            for (let i = 0; i<word.length; i++) {
+              if (!guesses.includes(word[i])) {
+                return false
+              }
+            }
+            return true
+        }
+
+        if (g === "") {
+            return this.setState({ message: "You didn't make a guess!" })
+        }
+
+        if (!alphabet.includes(g)) {
+            return this.setState({ message: "That is not actually a letter." })
+        }
+
+        if (guesses.includes(g)) {
+          return this.setState({ message: "You already guessed " + g + ".",
+                              guess: "" });
+        }
+
+        if (word.includes(g)) {
+
+            guesses.push(g);
+
+            if (checkForCompletion(word, guesses)) {
+
+              return this.setState({
+                message: "Congratulations! You got it!!",
+                gameOver:true,
+                guess:"",
+                dictionaryRowClass: "dictionary-row"
+              })
+
+            } else {
+
+              return this.setState({
+                lettersGuessed: guesses,
+                message: "Good guess! The letter " + g + " is in the word.",
+                guess: "",
+                });
+
+            }
+
+        } else if (this.state.guessesLeft > 1) {
+
+            guesses.push(g)
+
+            return this.setState({
+              lettersGuessed: guesses,
+              guessesLeft: guessesLeft - 1,
+              message: "Bad guess. The letter " + g + " is not in the word.",
+              guess: "",
+            })
+
+        } else {
+
+            return this.setState({
+              lettersGuessed: guesses,
+              guessesLeft: guessesLeft - 1,
+              message: "No more guesses! The word is " + this.state.word + ".",
+              gameOver:true,
+              dictionaryRowClass: "dictionary-row"
+            })
+
+        }
+
+        console.log(this.state.lettersGuessed)
     }
 
 
@@ -235,7 +261,7 @@ class GameContainer extends React.Component {
             handleGuess = null;
         }
 
-      return (
+       return (
           <div>
             <div className="GameContainer">
               <div className="col1">
@@ -285,7 +311,6 @@ const DefEntry = (props) => {
         <div className="DefEntry">{props.num}  {props.entry}</div>
     )
 }
-
 
 
 

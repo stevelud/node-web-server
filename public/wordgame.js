@@ -74,7 +74,8 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     _this.handleKeyDown = _this.handleKeyDown.bind(_assertThisInitialized(_this));
     return _this;
-  }
+  } //EVENT METHODS ***************************************//
+
 
   _createClass(GameContainer, [{
     key: "handleChange",
@@ -95,11 +96,12 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "handleKeyDown",
     value: function handleKeyDown(event) {
+      //enter
       if (event.keyCode == 13 && this.state.guessesLeft > 0 && !this.state.gameOver) {
-        //enter
         this.guessLetter();
       }
-    }
+    } //LIFECYCLE METHODS *******************************************//
+
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
@@ -153,14 +155,32 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
       document.removeEventlistener('keydown', this.handleKeyDown);
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      // send game state to server if game is over:
+      if (this.state.gameOver) {
+        var gameState = JSON.stringify(this.state);
+        fetch('/saveWordgameResult', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: gameState
+        })["catch"](function (error) {
+          console.error('Error:', error);
+        });
+      }
+    } // CLASS METHODS *********************************************//
+
+  }, {
     key: "guessLetter",
     value: function guessLetter() {
-      // TO DO: include a sub method that, if the guess is wrong,
-      // flashes in red letters some msg like 'no bad guess!'
       var g = this.state.guess;
       var word = this.state.word;
       var guesses = this.state.lettersGuessed;
-      var guessesLeft = this.state.guessesLeft;
+      var guessesLeft = this.state.guessesLeft; // make sure no capital letters get through:
+
+      g = g.toLowerCase();
 
       function checkForCompletion(word, guesses) {
         for (var i = 0; i < word.length; i++) {
@@ -195,22 +215,6 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
         guesses.push(g);
 
         if (checkForCompletion(word, guesses)) {
-          console.log("pre-stringified: " + this.state);
-          var w = JSON.stringify(this.state);
-          console.log("post-stringified: " + w);
-          fetch('/wg', {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: w
-          }).then(function (response) {
-            return response.json();
-          }).then(function (data) {
-            console.log('Success:', data);
-          })["catch"](function (error) {
-            console.error('Error:', error);
-          });
           return this.setState({
             message: "Congratulations! You got it!!",
             gameOver: true,
@@ -233,24 +237,6 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
           guess: ""
         });
       } else {
-        console.log("pre-stringified: " + this.state);
-
-        var _w = JSON.stringify(this.state);
-
-        console.log("post-stringified: " + _w);
-        fetch('/wg', {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: _w
-        }).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          console.log('Success:', data);
-        })["catch"](function (error) {
-          console.error('Error:', error);
-        });
         return this.setState({
           lettersGuessed: guesses,
           guessesLeft: guessesLeft - 1,
