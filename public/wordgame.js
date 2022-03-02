@@ -188,11 +188,6 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
         return this.setState({
           message: "You already guessed " + g + ".",
           guess: ""
-        }); // send game state to server to be saved for user
-
-        fetch.post('/sendWordGameState', {
-          method: 'POST',
-          body: JSON.stringify(this.state)
         });
       }
 
@@ -200,6 +195,22 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
         guesses.push(g);
 
         if (checkForCompletion(word, guesses)) {
+          console.log("pre-stringified: " + this.state);
+          var w = JSON.stringify(this.state);
+          console.log("post-stringified: " + w);
+          fetch('/wg', {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: w
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            console.log('Success:', data);
+          })["catch"](function (error) {
+            console.error('Error:', error);
+          });
           return this.setState({
             message: "Congratulations! You got it!!",
             gameOver: true,
@@ -222,6 +233,24 @@ var GameContainer = /*#__PURE__*/function (_React$Component) {
           guess: ""
         });
       } else {
+        console.log("pre-stringified: " + this.state);
+
+        var _w = JSON.stringify(this.state);
+
+        console.log("post-stringified: " + _w);
+        fetch('/wg', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: _w
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          console.log('Success:', data);
+        })["catch"](function (error) {
+          console.error('Error:', error);
+        });
         return this.setState({
           lettersGuessed: guesses,
           guessesLeft: guessesLeft - 1,

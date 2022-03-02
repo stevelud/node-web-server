@@ -13,14 +13,24 @@ var app = express('view engine', 'hbs');
 var port = process.env.PORT || 8080;
 
 
+
+// this is for POST sending the params encoded in URL
 app.use(bodyParser.urlencoded({ extended: true }))
+
+
+// this if POST is sending straight JSON
+app.use(bodyParser.json())
+
 
 app.use(express.static(__dirname + '/public'));
 
 
-
 // cookie middleware should come before session middleware
 app.use(cookieParser());
+
+
+// SESSIONS **********************************************//
+
 
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
@@ -33,7 +43,10 @@ app.use(expressSession({
     resave: false
 }));
 
+
 routes(app);
+
+
 
 // HANDLEBARS **********************************************//
 

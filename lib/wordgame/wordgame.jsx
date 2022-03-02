@@ -129,104 +129,138 @@ class GameContainer extends React.Component {
       let guesses = this.state.lettersGuessed;
       let guessesLeft = this.state.guessesLeft;
 
-    function checkForCompletion(word, guesses) {
-        for (let i = 0; i<word.length; i++) {
-          if (!guesses.includes(word[i])) {
-            return false
+
+
+
+      function checkForCompletion(word, guesses) {
+          for (let i = 0; i<word.length; i++) {
+            if (!guesses.includes(word[i])) {
+              return false
+            }
           }
+          return true
+      }
+
+      if (g === "") {
+          return this.setState({ message: "You didn't make a guess!" })
+      }
+
+      if (!alphabet.includes(g)) {
+          return this.setState({ message: "That is not actually a letter." })
+      }
+
+      if (guesses.includes(g)) {
+        return this.setState({ message: "You already guessed " + g + ".",
+                            guess: "" });
+      }
+
+      if (word.includes(g)) {
+        guesses.push(g);
+        if (checkForCompletion(word, guesses)) {
+
+          console.log("pre-stringified: " + this.state);
+
+          const w = JSON.stringify(this.state);
+
+          console.log("post-stringified: " + w);
+
+
+          fetch('/wg', {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: w,
+            }).catch((error) => {
+                console.error('Error:', error);
+              });
+
+
+          return this.setState({
+            message: "Congratulations! You got it!!",
+            gameOver:true,
+            guess:"",
+            dictionaryRowClass: "dictionary-row"
+          })
+        } else {
+          return this.setState({
+            lettersGuessed: guesses,
+            message: "Good guess! The letter " + g + " is in the word.",
+            guess: "",
+            });
         }
-        return true
-    }
-
-    if (g === "") {
-        return this.setState({ message: "You didn't make a guess!" })
-    }
-
-    if (!alphabet.includes(g)) {
-        return this.setState({ message: "That is not actually a letter." })
-    }
-
-    if (guesses.includes(g)) {
-      return this.setState({ message: "You already guessed " + g + ".",
-                          guess: "" });
-
-
-      // send game state to server to be saved for user
-      fetch.post('/sendWordGameState', { method: 'POST',
-        body: JSON.stringify(this.state) })
-    }
-
-    if (word.includes(g)) {
-      guesses.push(g);
-      if (checkForCompletion(word, guesses)) {
-        return this.setState({
-          message: "Congratulations! You got it!!",
-          gameOver:true,
-          guess:"",
-          dictionaryRowClass: "dictionary-row"
-        })
-      } else {
+      } else if (this.state.guessesLeft > 1) {
+        guesses.push(g)
         return this.setState({
           lettersGuessed: guesses,
-          message: "Good guess! The letter " + g + " is in the word.",
+          guessesLeft: guessesLeft - 1,
+          message: "Bad guess. The letter " + g + " is not in the word.",
           guess: "",
-          });
-      }
-    } else if (this.state.guessesLeft > 1) {
-      guesses.push(g)
-      return this.setState({
-        lettersGuessed: guesses,
-        guessesLeft: guessesLeft - 1,
-        message: "Bad guess. The letter " + g + " is not in the word.",
-        guess: "",
-      })
-    } else {
-      return this.setState({
-        lettersGuessed: guesses,
-        guessesLeft: guessesLeft - 1,
-        message: "No more guesses! The word is " + this.state.word + ".",
-        gameOver:true,
-        dictionaryRowClass: "dictionary-row"
-      })
-    }
-    console.log(this.state.lettersGuessed)
-  }
-
-
-  render() {
-      let handleGuess;
-      if (!this.state.gameOver) {
-          handleGuess = this.guessLetter;
+        })
       } else {
-          handleGuess = null;
-      }
 
-    return (
-        <div>
-          <div className="GameContainer">
-            <div className="col1">
-              <PlayerFrame playerName="Human"
-                           buttonHandler={handleGuess}
-                           inputHandler={this.handleChange}
-                           handleClick={this.handleClick}
-                           message={this.state.message}
-                           guess={this.state.guess} />
-              <GuessCounterBar guessesLeft={this.state.guessesLeft} />
-              <WordBar word={this.state.word}
-                       lettersGuessed={this.state.lettersGuessed} />
-            </div>
-            <div className="col2">
-              <Keyboard lettersGuessed={this.state.lettersGuessed}
-                        word={this.state.word} />
-            </div>
-          </div>
-          <div className={this.state.dictionaryRowClass}>
-            <DictionaryRow word={this.state.word}
-                           defs={this.state.wordDefs} />
-          </div>
-        </div>
-      )
+        console.log("pre-stringified: " + this.state);
+
+        const w = JSON.stringify(this.state);
+
+        console.log("post-stringified: " + w);
+
+        fetch('/wg', {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: w,
+          }).catch((error) => {
+              console.error('Error:', error);
+            });
+
+        return this.setState({
+          lettersGuessed: guesses,
+          guessesLeft: guessesLeft - 1,
+          message: "No more guesses! The word is " + this.state.word + ".",
+          gameOver:true,
+          dictionaryRowClass: "dictionary-row"
+        })
+      }
+      console.log(this.state.lettersGuessed)
     }
+
+
+    render() {
+        let handleGuess;
+        if (!this.state.gameOver) {
+            handleGuess = this.guessLetter;
+        } else {
+            handleGuess = null;
+        }
+
+      return (
+          <div>
+            <div className="GameContainer">
+              <div className="col1">
+                <PlayerFrame playerName="Human"
+                             buttonHandler={handleGuess}
+                             inputHandler={this.handleChange}
+                             handleClick={this.handleClick}
+                             message={this.state.message}
+                             guess={this.state.guess} />
+                <GuessCounterBar guessesLeft={this.state.guessesLeft} />
+                <WordBar word={this.state.word}
+                         lettersGuessed={this.state.lettersGuessed} />
+              </div>
+              <div className="col2">
+                <Keyboard lettersGuessed={this.state.lettersGuessed}
+                          word={this.state.word} />
+              </div>
+            </div>
+            <div className={this.state.dictionaryRowClass}>
+              <DictionaryRow word={this.state.word}
+                             defs={this.state.wordDefs} />
+            </div>
+          </div>
+        )
+      }
 }
 
 
