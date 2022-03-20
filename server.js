@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 
+// static assets
 app.use(express.static(__dirname + '/public'));
 
 
